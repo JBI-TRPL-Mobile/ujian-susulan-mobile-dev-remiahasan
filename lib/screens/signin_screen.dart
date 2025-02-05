@@ -1,6 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:template_project/services/auth_service.dart';
 
-class SigninScreens extends StatelessWidget {
+class SigninScreens extends StatefulWidget {
+  @override
+  _SigninScreenState createState() => _SigninScreenState();
+}
+
+class _SigninScreenState extends State<SigninScreens> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
+
+  @override
+  void initState() {
+    super.initState();
+    _authService.loadUsers();
+  }
+
+  void _login() {
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+
+    if (_authService.login(email, password)) {
+      Navigator.pushNamed(context, '/home');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Invalid email or password')),
+      );
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
